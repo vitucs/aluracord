@@ -13,6 +13,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@skynexui/components": "^1.23.8"
+    "@skynexui/components": "^1.23.8",
+    "@supabase/supabase-js": "^1.29.4"
   }
 }
