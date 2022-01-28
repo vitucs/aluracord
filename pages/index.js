@@ -121,17 +121,10 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
-              onChange={(event)=>{
+              onChange={async (event)=>{
                   setUsername(event.target.value);
-                  fetch(`https://www.instagram.com/${username}/?__a=1`,{ headers:{
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': '*',
-                    'Access-Control-Allow-Headers': '*'
-                  }})
-                  .then((res)=>{
-                    res = res.toJson();
-                    console.log(res);
-                  })
+                  fetch(`https://www.instagram.com/${username}/?__a=1`)
+                  .then((res) => console.log(res.json()))
                   .then(({graphql})=>{
                     setPhoto(graphql.user.profile_pic_url);
                   });
