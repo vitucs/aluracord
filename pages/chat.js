@@ -17,7 +17,7 @@ const SUPABASE_URL = "https://ovfffxwwmrtxzwmhradb.supabase.co";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 export default function ChatPage() {
-  const username = "vitucs";
+  const [username, setUsername] = React.useState("");
   const [mensagem, setMensagem] = React.useState("");
   const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
 
@@ -25,9 +25,17 @@ export default function ChatPage() {
     supabase
       .from("mensagens")
       .select("*")
-      .order('id', {ascending:false})
+      .order("id", { ascending: false })
       .then(({ data }) => {
         setListaDeMensagens(data);
+      });
+
+    supabase
+      .from("login")
+      .select("user")
+      .order("id", { ascending: false })
+      .then(({ data }) => {
+        setUsername(data[0].user);
       });
   }, []);
   /*
@@ -246,6 +254,11 @@ function MessageList(props) {
                       return msg;
                     }
                   });
+                  supabase
+                    .from("mensagens")
+                    .delete()
+                    .match({ id: mensagem.id })
+                    .then();
                   props.setListaDeMensagens(array);
                 }}
               />

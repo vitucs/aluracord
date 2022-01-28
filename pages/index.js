@@ -2,6 +2,13 @@ import React from 'react';
 import appConfig from "../config.json";
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
 import {useRouter} from 'next/router';
+import { createClient } from "@supabase/supabase-js";
+
+const SUPABASE_ANON_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiYW5vbiIsImlhdCI6MTY0MzI4ODU1MSwiZXhwIjoxOTU4ODY0NTUxfQ.qqAQ4E4IKa9k0lk8IMMGxHjvCT4yrR8QCm8eD2PR96g";
+const SUPABASE_URL = "https://ovfffxwwmrtxzwmhradb.supabase.co";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function Titulo(props) {
   const Tag = props.tag || 'h1';
@@ -32,7 +39,11 @@ function Titulo(props) {
 //export default HomePage
 
 export default function PaginaInicial() {
-  const [username, setUsername] = React.useState('vitucs');
+  const [username, setUsername] = React.useState('');
+  const login = {
+    user: username
+  };
+  const [photo, setPhoto] = React.useState('');
   const roteamento = useRouter();
   return (
     <>
@@ -72,6 +83,10 @@ export default function PaginaInicial() {
             as="form"
             onSubmit={(e)=>{
                 e.preventDefault();
+                supabase
+                .from("login")
+                .insert([login])
+                .then(({ data }) => {});
                 roteamento.push('/chat');
             }}
             styleSheet={{
@@ -106,8 +121,21 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
-              onChange={ (event)=>{
+              onChange={(event)=>{
                   setUsername(event.target.value);
+                  fetch(`https://www.instagram.com/${username}/?__a=1`,{ headers:{
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': '*',
+                    'Access-Control-Allow-Headers': '*'
+                  }})
+                  .then((res)=>{
+                    res = res.toJson();
+                    console.log(res);
+                  })
+                  .then(({graphql})=>{
+                    setPhoto(graphql.user.profile_pic_url);
+                  });
+                  
               }}
             />
             <Button
@@ -145,7 +173,7 @@ export default function PaginaInicial() {
                 borderRadius: "50%",
                 marginBottom: "16px",
               }}
-              src={`https://github.com/${username}.png`}
+              src={`${photo}`}
             />
             <Text
               variant="body4"
