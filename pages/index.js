@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 import appConfig from "../config.json";
 import { Box, Button, Text, TextField, Image } from "@skynexui/components";
-import {useRouter} from 'next/router';
+import { useRouter } from "next/router";
 import { createClient } from "@supabase/supabase-js";
 
 const SUPABASE_ANON_KEY =
@@ -11,7 +11,7 @@ const SUPABASE_URL = "https://ovfffxwwmrtxzwmhradb.supabase.co";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 function Titulo(props) {
-  const Tag = props.tag || 'h1';
+  const Tag = props.tag || "h1";
   return (
     <>
       <Tag>{props.children}</Tag>
@@ -39,12 +39,32 @@ function Titulo(props) {
 //export default HomePage
 
 export default function PaginaInicial() {
-  const [username, setUsername] = React.useState('');
+  const [username, setUsername] = React.useState("");
   const login = {
-    user: username
+    user: username,
   };
-  const [photo, setPhoto] = React.useState('');
+  const [photo, setPhoto] = React.useState("");
   const roteamento = useRouter();
+  React.useEffect(() => {
+    if (
+      username == "vitucss" ||
+      username == "euithalo" ||
+      username == "maissonamorim" ||
+      username == "jose_diogo" ||
+      username == "alvslimagabriel" ||
+      username == "naperolaa" ||
+      username == "oguisonick" ||
+      username == "oalessandroferrari"||
+      username == "mateusomsm"||
+      username == "joaovitorbispar"
+    ){
+      setPhoto(`images/${username}.jpg`);
+    }else {
+      setPhoto(
+        "https://static.vecteezy.com/ti/vetor-gratis/p1/2387693-icone-do-perfil-do-usuario-gr%C3%A1tis-vetor.jpg"
+      );
+    }
+  }, [username]);
   return (
     <>
       <Box
@@ -81,13 +101,13 @@ export default function PaginaInicial() {
           {/* Formulário */}
           <Box
             as="form"
-            onSubmit={(e)=>{
-                e.preventDefault();
-                supabase
+            onSubmit={(e) => {
+              e.preventDefault();
+              supabase
                 .from("login")
                 .insert([login])
                 .then(({ data }) => {});
-                roteamento.push('/chat');
+              roteamento.push("/chat");
             }}
             styleSheet={{
               display: "flex",
@@ -121,14 +141,8 @@ export default function PaginaInicial() {
                   backgroundColor: appConfig.theme.colors.neutrals[800],
                 },
               }}
-              onChange={async (event)=>{
-                  setUsername(event.target.value);
-                  fetch(`https://www.instagram.com/${username}/?__a=1`)
-                  .then((res) => console.log(res.json()))
-                  .then(({graphql})=>{
-                    setPhoto(graphql.user.profile_pic_url);
-                  });
-                  
+              onChange={async (event) => {
+                setUsername(event.target.value);
               }}
             />
             <Button
@@ -176,8 +190,9 @@ export default function PaginaInicial() {
                 padding: "3px 10px",
                 borderRadius: "1000px",
               }}
+              src={photo}
             >
-              {username}
+              @{username}
             </Text>
           </Box>
           {/* Photo Area */}

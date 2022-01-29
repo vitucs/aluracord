@@ -20,6 +20,7 @@ export default function ChatPage() {
   const [username, setUsername] = React.useState("");
   const [mensagem, setMensagem] = React.useState("");
   const [listaDeMensagens, setListaDeMensagens] = React.useState([]);
+  const [photo, setPhoto] = React.useState('');
 
   React.useEffect(() => {
     supabase
@@ -109,6 +110,7 @@ export default function ChatPage() {
             setListaDeMensagens={setListaDeMensagens}
             mensagens={listaDeMensagens}
             username={username}
+            photo={photo}
           />
           {/* {listaDeMensagens.map((mensagemAtual) => {
                         return (
@@ -229,7 +231,7 @@ function MessageList(props) {
                   display: "inline-block",
                   marginRight: "8px",
                 }}
-                src={`https://github.com/${mensagem.de}.png`}
+                src={`/images/${mensagem.de}.jpg`}
               />
               <Text tag="strong">{mensagem.de}</Text>
               <Text
@@ -244,22 +246,27 @@ function MessageList(props) {
               </Text>
               <Icon
                 styleSheet={{
-                  marginLeft: "93%",
-                  color: "red",
+                  marginLeft:'1%',
+                  color: "red"
                 }}
                 name="FaRegWindowClose"
                 onClick={() => {
-                  let array = props.mensagens.filter((msg) => {
-                    if (msg.id != mensagem.id) {
-                      return msg;
-                    }
-                  });
-                  supabase
-                    .from("mensagens")
-                    .delete()
-                    .match({ id: mensagem.id })
-                    .then();
-                  props.setListaDeMensagens(array);
+                  if(props.username == mensagem.de || props.username == 'vitucss'){
+                    let array = props.mensagens.filter((msg) => {
+                      if (msg.id != mensagem.id) {
+                        return msg;
+                      }
+                    });
+                    supabase
+                      .from("mensagens")
+                      .delete()
+                      .match({ id: mensagem.id })
+                      .then();
+                    props.setListaDeMensagens(array);
+                  }
+                  else{
+                    alert('Você só pode excluir suas mensagens!');
+                  }
                 }}
               />
             </Box>
