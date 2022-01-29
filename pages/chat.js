@@ -134,7 +134,6 @@ export default function ChatPage() {
               }}
               onKeyPress={(event) => {
                 if (event.key === "Enter") {
-                  event.preventDefault();
                   handleNovaMensagem(mensagem);
                 }
               }}
